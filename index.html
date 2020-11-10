@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="app"></div>
+
+        <script defer type="module" src="https://jspm.dev/es-module-shims"></script>
+        <script type="importmap-shim">
+        {
+          "imports": {
+            "@cycle/dom": "https://jspm.dev/@cycle/dom@22.8.0",
+            "@cycle/run": "https://jspm.dev/@cycle/run@5.5.0",
+            "@cycle/state": "https://jspm.dev/@cycle/state@1.4.0",
+            "currency.js": "https://jspm.dev/currency.js@2.0.3",
+            "xstream": "https://jspm.dev/xstream@11.14.0"
+          }
+        }
+        </script>
+        <script type="module-shim">
+        import './src/index.js';
+        </script>
+    </body>
+</html>

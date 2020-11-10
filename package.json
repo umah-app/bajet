@@ -1,0 +1,23 @@
+{
+  "license": "(Apache-2.0 OR MIT)",
+  "scripts": {
+    "start": "web-dev-server --open",
+    "start:watch": "web-dev-server --open --watch",
+    "test": "web-test-runner test/**/*.test.js",
+    "test:watch": "web-test-runner test/**/*.test.js --watch"
+  },
+  "dependencies": {
+    "@cycle/dom": "^22.8.0",
+    "@cycle/run": "^5.5.0",
+    "@cycle/state": "^1.4.0",
+    "currency.js": "^2.0.3",
+    "xstream": "^11.14.0"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.0.19",
+    "@web/test-runner": "^0.9.7",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
