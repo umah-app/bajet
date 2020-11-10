@@ -8,16 +8,14 @@ const xs = _xs.default || _xs;
 
 function main(sources) {
   const state$ = sources.state.stream;
-  const vdom$ = state$.map(state => div([
-    div('.balance', state.balance.format()),
+  const vdom$ = state$.map(({ balance }) => div([
+    div('.balance', balance.format()),
   ]));
 
-  const initReducer$ = xs.of(function initReducer(prevState) {
-    return {
-      balance: currency(0),
-    };
-  });
-  const reducer$ = xs.merge(initReducer$, /*...*/);
+  const initReducer$ = xs.of((_prevState) => ({
+    balance: currency(0),
+  }));
+  const reducer$ = xs.merge(initReducer$ /* ... */);
 
   const sinks = {
     DOM: vdom$,
