@@ -1,5 +1,5 @@
 import _xs from 'xstream';
-import { div, makeDOMDriver } from '@cycle/dom';
+import { h, makeDOMDriver } from '@cycle/dom';
 import { run } from '@cycle/run';
 import { withState } from '@cycle/state';
 import currency from 'currency.js';
@@ -8,8 +8,14 @@ const xs = _xs.default || _xs;
 
 function main(sources) {
   const state$ = sources.state.stream;
-  const vdom$ = state$.map(({ balance }) => div([
-    div('.balance', balance.format()),
+  const vdom$ = state$.map(({ balance }) => h('div', [
+    h('header.mdc-top-app-bar.mdc-top-app-bar--fixed', [
+      h('div.mdc-top-app-bar__row', [
+        h('section.mdc-top-app-bar__section.mdc-top-app-bar__section--align-start', [
+          h('span.mdc-top-app-bar__title.balance', balance.format()),
+        ]),
+      ]),
+    ]),
   ]));
 
   const initReducer$ = xs.of((_prevState) => ({
