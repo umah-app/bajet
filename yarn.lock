@@ -2237,6 +2237,18 @@ https-proxy-agent@^4.0.0:
     agent-base "5"
     debug "4"
 
+hyperscript-attribute-to-property@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/hyperscript-attribute-to-property/-/hyperscript-attribute-to-property-1.0.2.tgz#66ad4164f88beefacf46ec884bd3d1173c1c382a"
+  integrity sha512-oerMul16jZCmrbNsUw8QgrtDzF8lKgFri1bKQjReLw1IhiiNkI59CWuzZjJDGT79UQ1YiWqXhJMv/tRMVqgtkA==
+
+hyperx@^2.3.0:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/hyperx/-/hyperx-2.5.4.tgz#72b4c3ed4111f64838221a9d0409e6bfc3f78d9e"
+  integrity sha512-iOkSh7Yse7lsN/B9y7OsevLWjeXPqGuHQ5SbwaiJM5xAhWFqhoN6erpK1dQsS12OFU36lyai1pnx1mmzWLQqcA==
+  dependencies:
+    hyperscript-attribute-to-property "^1.0.0"
+
 iconv-lite@0.4.24:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -3683,6 +3695,19 @@ snabbdom@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/snabbdom/-/snabbdom-0.7.4.tgz#817f07e8d3fb870960c3763b8da56f1ba982d31a"
   integrity sha512-nnN+7uZ2NTIiu7EPMNwSDhmrYXqwlfCP/j72RdzvDPujXyvQxOW7Jl9yuLayzxMHDNWQR7FM6Pcn4wnDpKRe6Q==
+
+snabbdom@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/snabbdom/-/snabbdom-2.1.0.tgz#cef6d44f1170574582bffdce128cfbb46d2b5f6b"
+  integrity sha512-3GPeO80A2/bob5ADrkRX8FtvW8kHbJ0aRb4XAN2MIN4bY2dprNJkhp87AgfjWgVhIkwgX9DOsuTLjWwBhMXMkQ==
+
+snabby@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/snabby/-/snabby-2.0.1.tgz#239bcf343d1574fd1f7df8909f086a876b8326a7"
+  integrity sha512-GuiKcsbMvBLeEns+m5OWFEZezLHq2/EOiRgEnRjIBoaWe1uF4m/XBJ6eXUhmY7aPDuzdVLlzj/gC75X4XGN2Yw==
+  dependencies:
+    hyperx "^2.3.0"
+    snabbdom "^2.1.0"
 
 snake-case@^3.0.3:
   version "3.0.3"
