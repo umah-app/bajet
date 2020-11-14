@@ -1,5 +1,52 @@
-button.add {
+.app-card-collection {
+  margin: 0;
+  padding: 8px 0;
+}
+
+.app-card-collection > .mdc-card {
+  margin-bottom: 8px;
+  min-height: 72px;
+}
+
+.app-card__text {
+  padding-left: 16px;
+  padding-right: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.app-card__text:first-child,
+.mdc-card__media + .app-card__text {
+  padding-top: 16px;
+}
+
+.app-card__icon {
+  margin-left: 0;
+  margin-right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .3);
+  fill: currentColor;
+  color: #fff;
+}
+
+.app-card__text--align-right {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.app-fab--fixed {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 16px;
+  right: 16px;
 }

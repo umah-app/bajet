@@ -35,25 +35,18 @@ function main(sources) {
         'mdc-top-app-bar--fixed-adjust': true,
       }}>
         <ol @class=${{
-          'mdc-list': true,
-          'mdc-list--two-line': true,
-          'mdc-list--avatar-list': true,
+          'app-card-collection': true,
           entries: true,
         }}>
-          ${entries.map(({ name, price }) => [
-            html`
-              <li @class=${{
-                'mdc-list-divider': true,
-              }} @props=${{
-                role: 'separator',
-              }}></li>
-            `,
-            html`
-              <li @class=${{
-                'mdc-list-item': true,
+          ${entries.map(({ name, price }) => html`
+            <li @class=${{
+              'mdc-card': true,
+            }}>
+              <div @class=${{
+                'app-card__text': true,
               }}>
                 <span @class=${{
-                  'mdc-list-item__graphic': true,
+                  'app-card__icon': true,
                   'material-icons': true,
                 }} @props=${{
                   'aria-hidden': true,
@@ -61,28 +54,28 @@ function main(sources) {
                   store
                 </span>
                 <span @class=${{
-                  'mdc-list-item__text': true,
+                  'mdc-typography': true,
+                  'mdc-typography--headline6': true,
                 }}>
-                  <span @class=${{
-                    'mdc-list-item__primary-text': true,
-                  }}>
-                    ${name}
-                  </span>
+                  ${name}
                 </span>
                 <span @class=${{
-                  'mdc-list-item__meta': true,
+                  'mdc-typography': true,
+                  'mdc-typography--subtitle2': true,
+                  'app-card__text--align-right': true,
                 }}>
                   ${price.format()}
                 </span>
-              </li>
-            `,
-          ])}
+              </div>
+            </li>
+          `)}
         </ol>
       </main>
       ${addingEntry ? [] : [html`
         <button @class=${{
           'mdc-fab': true,
           'mdc-elevation--z6': true,
+          'app-fab--fixed': true,
           add: true,
         }} @props=${{
           'aria-label': 'add',
