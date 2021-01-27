@@ -12,7 +12,9 @@
     "@cycle/dom": "^22.8.0",
     "@cycle/run": "^5.5.0",
     "@cycle/state": "^1.4.0",
+    "autonumeric": "^4.6.0",
     "currency.js": "^2.0.3",
+    "material-components-web": "^8.0.0",
     "snabby": "^2.0.1",
     "xstream": "^11.14.0"
   },
