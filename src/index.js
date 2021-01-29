@@ -12,9 +12,15 @@ const MDCTextField = textField.MDCTextField;
 const MDCTopAppBar = topAppBar.MDCTopAppBar;
 const xs = _xs.default || _xs;
 
+class EntryMode {
+  static idle = Symbol('idle');
+  static add = Symbol('add');
+  static edit = Symbol('edit');
+}
+
 function main(sources) {
   const state$ = sources.state.stream.debug();
-  const vdom$ = state$.map(({ addingEntry, balance, entries }) => html`
+  const vdom$ = state$.map(({ balance, entries, entryMode }) => html`
     <div>
       <header @class=${{
         'mdc-top-app-bar': true,
@@ -46,10 +52,13 @@ function main(sources) {
         <ol @class=${{
           'app-card-collection': true,
           entries: true,
+          idle: entryMode === EntryMode.idle,
         }}>
-          ${entries.map(({ draft, name, amount }) => html`
+          ${entries.map(({ amount, editing, name }, idx) => html`
             <li @class=${{
               'mdc-card': true,
+            }} @dataset=${{
+              idx: String(idx),
             }}>
               <div @class=${{
                 'app-card__text': true,
@@ -62,7 +71,7 @@ function main(sources) {
                 }}>
                   store
                 </span>
-                ${draft ? html`
+                ${editing ? html`
                   <label @class=${{
                     'mdc-text-field': true,
                     'mdc-text-field--filled': true,
@@ -103,7 +112,7 @@ function main(sources) {
                     ${name}
                   </span>
                 `}
-                ${draft ? html`
+                ${editing ? html`
                   <label @class=${{
                     'mdc-text-field': true,
                     'mdc-text-field--filled': true,
@@ -159,8 +168,8 @@ function main(sources) {
         'mdc-fab': true,
         'mdc-elevation--z6': true,
         'app-fab--fixed': true,
-        add: !addingEntry,
-        save: addingEntry,
+        add: entryMode === EntryMode.idle,
+        save: entryMode === EntryMode.add || entryMode === EntryMode.edit,
       }} @attrs=${{
         'aria-label': 'add',
       }} @hook=${{
@@ -175,60 +184,72 @@ function main(sources) {
           'mdc-fab__icon': true,
           'material-icons': true,
         }}>
-          ${addingEntry ? 'done' : 'add'}
+          ${entryMode === EntryMode.idle ? 'add' : 'done'}
         </span>
       </button>
     </div>
   `);
 
   const initReducer$ = xs.of((_prevState) => ({
-    addingEntry: false,
     balance: currency(0),
     entries: [
     ],
+    entryMode: EntryMode.idle,
   }));
-  const addButtonClickEvent$ = sources.DOM.select('button.add').events('click').debug(ev => {console.log(ev.currentTarget)});
-  const saveButtonClickEvent$ = sources.DOM.select('button.save').events('click').debug(ev => {console.log(ev.currentTarget)});
+  const addButtonClickEvent$ = sources.DOM.select('button.add').events('click');
   const addEntryReducer$ = addButtonClickEvent$.map((_ev) => (prevState) => ({
     ...prevState,
-    addingEntry: true,
     entries: [
       ...prevState.entries,
       {
+        amount: currency(0),
         draft: true,
         editing: true,
         name: '',
-        amount: currency(0),
       },
     ],
+    entryMode: EntryMode.add,
+  }));
+  const entryCardClickEvent$ = sources.DOM.select('ol.entries.idle > li').events('click');
+  const editEntryIdx$ = entryCardClickEvent$.map((ev) => Number(ev.ownerTarget.dataset.idx));
+  const editEntryReducer$ = editEntryIdx$.map((editEntryIdx) => (prevState) => ({
+    ...prevState,
+    entries: prevState.entries.map((entry, idx) => (idx === editEntryIdx ? {
+      ...entry,
+      editing: true,
+    } : entry)),
+    entryMode: EntryMode.edit,
   }));
   const nameTextFieldInputEvent$ = sources.DOM.select('input.name').events('input');
-  const updateNameReducer$ = nameTextFieldInputEvent$.map((ev) => (prevState) => ({
+  const nameInputValue$ = nameTextFieldInputEvent$.map((ev) => ev.ownerTarget.value);
+  const updateNameReducer$ = nameInputValue$.map((nameInputValue) => (prevState) => ({
     ...prevState,
     entries: prevState.entries.map((entry) => (entry.editing ? {
       ...entry,
-      name: ev.target.value,
+      name: nameInputValue,
     } : entry)),
   }));
   const amountTextFieldInputEvent$ = sources.DOM.select('input.amount').events('input');
-  const updateAmountReducer$ = amountTextFieldInputEvent$.map((ev) => (prevState) => ({
+  const amountInputValue$ = amountTextFieldInputEvent$.map((ev) => ev.ownerTarget.value);
+  const updateAmountReducer$ = amountInputValue$.map((amountInputValue) => (prevState) => ({
     ...prevState,
     entries: prevState.entries.map((entry) => (entry.editing ? {
       ...entry,
-      amount: currency(ev.target.value),
+      amount: currency(amountInputValue),
     } : entry)),
   }));
+  const saveButtonClickEvent$ = sources.DOM.select('button.save').events('click');
   const saveEntryReducer$ = saveButtonClickEvent$.map((_ev) => (prevState) => ({
     ...prevState,
-    addingEntry: false,
     entries: prevState.entries.map((entry) => (entry.editing ? {
       ...entry,
       draft: false,
       editing: false,
-     } : entry))
+    } : entry)),
+    entryMode: EntryMode.idle,
   }));
 
-  const reducer$ = xs.merge(initReducer$, addEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$);
+  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$);
 
   const sinks = {
     DOM: vdom$,
