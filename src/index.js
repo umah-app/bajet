@@ -37,12 +37,17 @@ function main(sources) {
             'mdc-top-app-bar__section': true,
             'mdc-top-app-bar__section--align-start': true,
           }}>
+            <button @class=${{
+              'mdc-top-app-bar__navigation-icon': true,
+              'mdc-icon-button': true,
+              'material-icons': true,
+            }} @attrs=${{
+              'aria-label': 'Open navigation menu',
+            }}>menu</button>
             <span @class=${{
               'mdc-top-app-bar__title': true,
               balance: true,
-            }}>
-              ${balance.format()}
-            </span>
+            }}>${balance.format()}</span>
           </section>
         </div>
       </header>
@@ -61,104 +66,102 @@ function main(sources) {
               idx: String(idx),
             }}>
               <div @class=${{
-                'app-card__text': true,
+                'mdc-card__primary-action': entryMode === EntryMode.idle,
+              }} @hook=${{
+                insert: (vnode) => {
+                  new MDCRipple(vnode.elm);
+                },
               }}>
-                <span @class=${{
-                  'app-card__icon': true,
-                  'material-icons': true,
-                }} @attrs=${{
-                  'aria-hidden': true,
+                <div @class=${{
+                  'app-card__text': true,
                 }}>
-                  store
-                </span>
-                ${editing ? html`
-                  <label @class=${{
-                    'mdc-text-field': true,
-                    'mdc-text-field--filled': true,
-                  }} @hook=${{
-                    insert: (vnode) => {
-                      new MDCTextField(vnode.elm);
-                    },
-                  }}>
-                    <span @class=${{
-                      'mdc-text-field__ripple': true,
-                    }}></span>
-                    <span @class=${{
-                      'mdc-floating-label': true,
-                    }} @attrs=${{
-                      id: 'name-text-field',
-                    }}>
-                      Name
-                    </span>
-                    <input @class=${{
-                      'mdc-text-field__input': true,
-                      name: true,
-                    }} @attrs=${{
-                      type: 'text',
-                      'aria-labelledby': 'name-text-field',
-                      value: name,
-                    }} @props=${{
-                      value: name,
-                    }}>
-                    <span @class=${{
-                      'mdc-line-ripple': true,
-                    }}></span>
-                  </label>
-                ` : html`
                   <span @class=${{
-                    'mdc-typography': true,
-                    'mdc-typography--headline6': true,
-                  }}>
-                    ${name}
-                  </span>
-                `}
-                ${editing ? html`
-                  <label @class=${{
-                    'mdc-text-field': true,
-                    'mdc-text-field--filled': true,
-                    'app-card__text--align-right': true,
-                  }} @hook=${{
-                    insert: (vnode) => {
-                      new MDCTextField(vnode.elm);
-                    },
-                  }}>
-                    <span @class=${{
-                      'mdc-text-field__ripple': true,
-                    }}></span>
-                    <span @class=${{
-                      'mdc-floating-label': true,
-                    }} @attrs=${{
-                      id: 'amount-text-field',
-                    }}>
-                      Amount
-                    </span>
-                    <input @class=${{
-                      'mdc-text-field__input': true,
-                      amount: true,
-                    }} @attrs=${{
-                      type: 'text',
-                      'aria-labelledby': 'amount-text-field',
-                      inputmode: 'numeric',
-                    }} @props=${{
-                      value: amount.value,
+                    'app-card__icon': true,
+                    'material-icons': true,
+                  }} @attrs=${{
+                    'aria-hidden': true,
+                  }}>store</span>
+                  ${editing ? html`
+                    <label @class=${{
+                      'mdc-text-field': true,
+                      'mdc-text-field--filled': true,
                     }} @hook=${{
                       insert: (vnode) => {
-                        new AutoNumeric(vnode.elm, 'numericPos');
+                        new MDCTextField(vnode.elm);
                       },
                     }}>
+                      <span @class=${{
+                        'mdc-text-field__ripple': true,
+                      }}></span>
+                      <span @class=${{
+                        'mdc-floating-label': true,
+                      }} @attrs=${{
+                        id: 'name-text-field',
+                      }}>Name</span>
+                      <input @class=${{
+                        'mdc-text-field__input': true,
+                        name: true,
+                      }} @attrs=${{
+                        type: 'text',
+                        'aria-labelledby': 'name-text-field',
+                        value: name,
+                      }} @props=${{
+                        value: name,
+                      }}>
+                      <span @class=${{
+                        'mdc-line-ripple': true,
+                      }}></span>
+                    </label>
+                  ` : html`
                     <span @class=${{
-                      'mdc-line-ripple': true,
-                    }}></span>
-                  </label>
-                ` : html`
-                  <span @class=${{
-                    'mdc-typography': true,
-                    'mdc-typography--subtitle2': true,
-                    'app-card__text--align-right': true,
-                  }}>
-                    ${amount.format()}
-                  </span>
-                `}
+                      'mdc-typography': true,
+                      'mdc-typography--headline6': true,
+                    }}>${name}</span>
+                  `}
+                  ${editing ? html`
+                    <label @class=${{
+                      'mdc-text-field': true,
+                      'mdc-text-field--filled': true,
+                      'app-card__text--align-right': true,
+                    }} @hook=${{
+                      insert: (vnode) => {
+                        new MDCTextField(vnode.elm);
+                      },
+                    }}>
+                      <span @class=${{
+                        'mdc-text-field__ripple': true,
+                      }}></span>
+                      <span @class=${{
+                        'mdc-floating-label': true,
+                      }} @attrs=${{
+                        id: 'amount-text-field',
+                      }}>Amount</span>
+                      <input @class=${{
+                        'mdc-text-field__input': true,
+                        amount: true,
+                      }} @attrs=${{
+                        type: 'text',
+                        'aria-labelledby': 'amount-text-field',
+                        inputmode: 'numeric',
+                      }} @props=${{
+                        value: amount.value,
+                      }} @hook=${{
+                        insert: (vnode) => {
+                          new AutoNumeric(vnode.elm, 'numericPos');
+                        },
+                      }}>
+                      <span @class=${{
+                        'mdc-line-ripple': true,
+                      }}></span>
+                    </label>
+                  ` : html`
+                    <span @class=${{
+                      'mdc-typography': true,
+                      'mdc-typography--subtitle2': true,
+                      'app-card__text--align-right': true,
+                    }}>${amount.format()}</span>
+                  `}
+                </div>
               </div>
             </li>
           `)}
@@ -183,9 +186,7 @@ function main(sources) {
         <span @class=${{
           'mdc-fab__icon': true,
           'material-icons': true,
-        }}>
-          ${entryMode === EntryMode.idle ? 'add' : 'done'}
-        </span>
+        }}>${entryMode === EntryMode.idle ? 'add' : 'done'}</span>
       </button>
     </div>
   `);
@@ -221,23 +222,31 @@ function main(sources) {
     entryMode: EntryMode.edit,
   }));
   const nameTextFieldInputEvent$ = sources.DOM.select('input.name').events('input');
-  const nameInputValue$ = nameTextFieldInputEvent$.map((ev) => ev.ownerTarget.value);
-  const updateNameReducer$ = nameInputValue$.map((nameInputValue) => (prevState) => ({
-    ...prevState,
-    entries: prevState.entries.map((entry) => (entry.editing ? {
-      ...entry,
-      name: nameInputValue,
-    } : entry)),
-  }));
+  const updateNameReducer$ = nameTextFieldInputEvent$.map((ev) => {
+    const inputValue = ev.ownerTarget.value;
+    const entryIdx = Number(ev.ownerTarget.closest('li').dataset.idx);
+
+    return (prevState) => ({
+      ...prevState,
+      entries: prevState.entries.map((entry, idx) => (idx === entryIdx ? {
+        ...entry,
+        name: inputValue,
+      } : entry)),
+    });
+  });
   const amountTextFieldInputEvent$ = sources.DOM.select('input.amount').events('input');
-  const amountInputValue$ = amountTextFieldInputEvent$.map((ev) => ev.ownerTarget.value);
-  const updateAmountReducer$ = amountInputValue$.map((amountInputValue) => (prevState) => ({
-    ...prevState,
-    entries: prevState.entries.map((entry) => (entry.editing ? {
-      ...entry,
-      amount: currency(amountInputValue),
-    } : entry)),
-  }));
+  const updateAmountReducer$ = amountTextFieldInputEvent$.map((ev) => {
+    const inputValue = ev.ownerTarget.value;
+    const entryIdx = Number(ev.ownerTarget.closest('li').dataset.idx);
+
+    return (prevState) => ({
+      ...prevState,
+      entries: prevState.entries.map((entry, idx) => (idx === entryIdx ? {
+        ...entry,
+        amount: currency(inputValue),
+      } : entry)),
+    });
+  });
   const saveButtonClickEvent$ = sources.DOM.select('button.save').events('click');
   const saveEntryReducer$ = saveButtonClickEvent$.map((_ev) => (prevState) => ({
     ...prevState,
