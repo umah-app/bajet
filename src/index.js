@@ -1,8 +1,9 @@
-import _xs from 'xstream';
+import _xs, { Stream } from 'xstream';
 import { makeDOMDriver } from '@cycle/dom';
 import { run } from '@cycle/run';
 import { ripple, textField, topAppBar } from 'material-components-web';
-import { withState } from '@cycle/state';
+import { DOMSource } from '@cycle/dom';
+import { StateSource, withState } from '@cycle/state';
 import AutoNumeric from 'autonumeric';
 import currency from 'currency.js';
 import html from 'snabby';
@@ -10,6 +11,7 @@ import html from 'snabby';
 const MDCRipple = ripple.MDCRipple;
 const MDCTextField = textField.MDCTextField;
 const MDCTopAppBar = topAppBar.MDCTopAppBar;
+/** @type {typeof Stream} */
 const xs = _xs.default || _xs;
 
 class EntryMode {
@@ -18,6 +20,11 @@ class EntryMode {
   static edit = Symbol('edit');
 }
 
+/**
+ * @param {Object}      sources
+ * @param {DOMSource}   sources.DOM
+ * @param {StateSource} sources.state
+ */
 function main(sources) {
   const state$ = sources.state.stream.debug();
   const vdom$ = state$.map(({ balance, entries, entryMode }) => html`
@@ -212,15 +219,18 @@ function main(sources) {
     entryMode: EntryMode.add,
   }));
   const entryCardClickEvent$ = sources.DOM.select('ol.entries.idle > li').events('click');
-  const editEntryIdx$ = entryCardClickEvent$.map((ev) => Number(ev.ownerTarget.dataset.idx));
-  const editEntryReducer$ = editEntryIdx$.map((editEntryIdx) => (prevState) => ({
-    ...prevState,
-    entries: prevState.entries.map((entry, idx) => (idx === editEntryIdx ? {
-      ...entry,
-      editing: true,
-    } : entry)),
-    entryMode: EntryMode.edit,
-  }));
+  const editEntryReducer$ = entryCardClickEvent$.map((ev) => {
+    const entryIdx = Number(ev.ownerTarget.dataset.idx);
+
+    return (prevState) => ({
+      ...prevState,
+      entries: prevState.entries.map((entry, idx) => (idx === entryIdx ? {
+        ...entry,
+        editing: true,
+      } : entry)),
+      entryMode: EntryMode.edit,
+    });
+  });
   const nameTextFieldInputEvent$ = sources.DOM.select('input.name').events('input');
   const updateNameReducer$ = nameTextFieldInputEvent$.map((ev) => {
     const inputValue = ev.ownerTarget.value;
