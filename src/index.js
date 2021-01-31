@@ -2,7 +2,6 @@ import _xs, { Stream } from 'xstream';
 import { makeDOMDriver } from '@cycle/dom';
 import { run } from '@cycle/run';
 import { ripple, textField, topAppBar } from 'material-components-web';
-import { DOMSource } from '@cycle/dom';
 import { StateSource, withState } from '@cycle/state';
 import AutoNumeric from 'autonumeric';
 import currency from 'currency.js';
@@ -21,9 +20,9 @@ class EntryMode {
 }
 
 /**
- * @param {Object}      sources
- * @param {DOMSource}   sources.DOM
- * @param {StateSource} sources.state
+ * @param {Object}                          sources
+ * @param {import('@cycle/dom').DOMSource}  sources.DOM
+ * @param {StateSource}                     sources.state
  */
 function main(sources) {
   const state$ = sources.state.stream.debug();
@@ -258,15 +257,20 @@ function main(sources) {
     });
   });
   const saveButtonClickEvent$ = sources.DOM.select('button.save').events('click');
-  const saveEntryReducer$ = saveButtonClickEvent$.map((_ev) => (prevState) => ({
-    ...prevState,
-    entries: prevState.entries.map((entry) => (entry.editing ? {
+  const saveEntryReducer$ = saveButtonClickEvent$.map((_ev) => (prevState) => {
+    const entries = prevState.entries.map((entry) => (entry.editing ? {
       ...entry,
       draft: false,
       editing: false,
-    } : entry)),
-    entryMode: EntryMode.idle,
-  }));
+    } : entry));
+
+    return ({
+      ...prevState,
+      balance: entries.reduce((acc, entry) => acc.add(entry.amount), currency(0)),
+      entries,
+      entryMode: EntryMode.idle,
+    });
+  });
 
   const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$);
 
