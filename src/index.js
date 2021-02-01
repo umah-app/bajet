@@ -31,6 +31,7 @@ function main(sources) {
       <header @class=${{
         'mdc-top-app-bar': true,
         'mdc-top-app-bar--fixed': true,
+        'app-top-app-bar--contextual': entryMode !== EntryMode.idle,
       }} @hook=${{
         insert: (vnode) => {
           new MDCTopAppBar(vnode.elm);
@@ -47,14 +48,37 @@ function main(sources) {
               'mdc-top-app-bar__navigation-icon': true,
               'mdc-icon-button': true,
               'material-icons': true,
+              close: entryMode !== EntryMode.idle,
             }} @attrs=${{
-              'aria-label': 'Open navigation menu',
-            }}>menu</button>
+              'aria-label': entryMode === EntryMode.idle ? 'Open navigation menu' : 'Close',
+            }}>${entryMode === EntryMode.idle ? 'menu' : 'close'}</button>
             <span @class=${{
               'mdc-top-app-bar__title': true,
-              balance: true,
-            }}>${balance.format()}</span>
+            }}>${{
+              [EntryMode.idle]: balance.format(),
+              [EntryMode.add]: 'Add entry',
+              [EntryMode.edit]: 'Edit entry',
+            }[entryMode]}</span>
           </section>
+          ${entryMode === EntryMode.idle ? '' : html`
+            <section @class=${{
+              'mdc-top-app-bar__section': true,
+              'mdc-top-app-bar__section--align-end': true,
+            }} @attrs=${{
+              role: 'toolbar',
+            }}>
+              ${entryMode === EntryMode.edit ? html`
+                <button @class=${{
+                  'mdc-top-app-bar__action-item': true,
+                  'mdc-icon-button': true,
+                  'material-icons': true,
+                  delete: true,
+                }} @attr=${{
+                  'aria-label': 'Delete',
+                }}>delete</button>
+              ` : ''}
+            </section>
+          `}
         </div>
       </header>
       <main @class=${{
@@ -271,8 +295,19 @@ function main(sources) {
       entryMode: EntryMode.idle,
     });
   });
+  const deleteButtonClickEvent$ = sources.DOM.select('button.delete').events('click');
+  const deleteEntryReducer$ = deleteButtonClickEvent$.map((_ev) => (prevState) => {
+    const entries = prevState.entries.filter((entry) => !entry.editing);
 
-  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$);
+    return ({
+      ...prevState,
+      balance: entries.reduce((acc, entry) => acc.add(entry.amount), currency(0)),
+      entries,
+      entryMode: EntryMode.idle,
+    });
+  });
+
+  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$, deleteEntryReducer$);
 
   const sinks = {
     DOM: vdom$,

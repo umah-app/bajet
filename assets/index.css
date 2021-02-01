@@ -1,3 +1,12 @@
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.app-top-app-bar--contextual {
+  background-color: #212121;
+}
+
 .app-card-collection {
   margin: 0;
   padding: 8px 0;
