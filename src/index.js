@@ -1,7 +1,8 @@
+import _sampleCombine from 'xstream/extra/sampleCombine';
 import _xs, { Stream } from 'xstream';
 import { makeDOMDriver } from '@cycle/dom';
-import { run } from '@cycle/run';
 import { ripple, textField, topAppBar } from 'material-components-web';
+import { run } from '@cycle/run';
 import { StateSource, withState } from '@cycle/state';
 import AutoNumeric from 'autonumeric';
 import currency from 'currency.js';
@@ -12,6 +13,7 @@ const MDCTextField = textField.MDCTextField;
 const MDCTopAppBar = topAppBar.MDCTopAppBar;
 /** @type {typeof Stream} */
 const xs = _xs.default || _xs;
+const sampleCombine = _sampleCombine.default || _sampleCombine;
 
 class EntryMode {
   static idle = Symbol('idle');
@@ -25,7 +27,8 @@ class EntryMode {
  * @param {StateSource}                     sources.state
  */
 function main(sources) {
-  const state$ = sources.state.stream.debug();
+  const state$ = sources.state.stream;
+  const savedEntries$ = state$.filter(({ entryMode }) => entryMode === EntryMode.idle).map(({ entries }) => entries);
   const vdom$ = state$.map(({ balance, entries, entryMode }) => html`
     <div>
       <header @class=${{
@@ -67,15 +70,23 @@ function main(sources) {
             }} @attrs=${{
               role: 'toolbar',
             }}>
+              <button @class=${{
+                'mdc-top-app-bar__action-item': true,
+                'mdc-icon-button': true,
+                'material-icons': true,
+                save: true,
+              }} @attr=${{
+                'aria-label': 'Save',
+              }}>done</button>
               ${entryMode === EntryMode.edit ? html`
-                <button @class=${{
-                  'mdc-top-app-bar__action-item': true,
-                  'mdc-icon-button': true,
-                  'material-icons': true,
-                  delete: true,
-                }} @attr=${{
-                  'aria-label': 'Delete',
-                }}>delete</button>
+                  <button @class=${{
+                    'mdc-top-app-bar__action-item': true,
+                    'mdc-icon-button': true,
+                    'material-icons': true,
+                    delete: true,
+                  }} @attr=${{
+                    'aria-label': 'Delete',
+                  }}>delete</button>
               ` : ''}
             </section>
           `}
@@ -197,27 +208,28 @@ function main(sources) {
           `)}
         </ol>
       </main>
-      <button @class=${{
-        'mdc-fab': true,
-        'mdc-elevation--z6': true,
-        'app-fab--fixed': true,
-        add: entryMode === EntryMode.idle,
-        save: entryMode === EntryMode.add || entryMode === EntryMode.edit,
-      }} @attrs=${{
-        'aria-label': 'add',
-      }} @hook=${{
-        insert: (vnode) => {
-          new MDCRipple(vnode.elm);
-        },
-      }}>
-        <div @class=${{
-          'mdc-fab__ripple': true,
-        }}></div>
-        <span @class=${{
-          'mdc-fab__icon': true,
-          'material-icons': true,
-        }}>${entryMode === EntryMode.idle ? 'add' : 'done'}</span>
-      </button>
+      ${entryMode === EntryMode.idle ? html`
+        <button @class=${{
+          'mdc-fab': true,
+          'mdc-elevation--z6': true,
+          'app-fab--fixed': true,
+          add: true,
+        }} @attrs=${{
+          'aria-label': 'Add entry',
+        }} @hook=${{
+          insert: (vnode) => {
+            new MDCRipple(vnode.elm);
+          },
+        }}>
+          <div @class=${{
+            'mdc-fab__ripple': true,
+          }}></div>
+          <span @class=${{
+            'mdc-fab__icon': true,
+            'material-icons': true,
+          }}>add</span>
+        </button>
+      ` : ''}
     </div>
   `);
 
@@ -306,8 +318,19 @@ function main(sources) {
       entryMode: EntryMode.idle,
     });
   });
+  const closeButtonClickEvent$ = sources.DOM.select('button.close').events('click');
+  const cancelAddReducer$ = closeButtonClickEvent$.map((_ev) => (prevState) => ({
+    ...prevState,
+    entries: prevState.entries.filter((entry) => !entry.draft),
+    entryMode: EntryMode.idle,
+  }));
+  const cancelEditReducer$ = closeButtonClickEvent$.compose(sampleCombine(savedEntries$)).map(([_ev, savedEntries]) => (prevState) => ({
+    ...prevState,
+    entries: savedEntries,
+    entryMode: EntryMode.idle,
+  }));
 
-  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$, deleteEntryReducer$);
+  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$, deleteEntryReducer$, cancelAddReducer$, cancelEditReducer$);
 
   const sinks = {
     DOM: vdom$,
