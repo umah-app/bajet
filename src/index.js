@@ -1,34 +1,38 @@
+import _material from 'material-components-web';
 import _sampleCombine from 'xstream/extra/sampleCombine';
-import _xs, { Stream } from 'xstream';
+import _xs from 'xstream';
 import { makeDOMDriver } from '@cycle/dom';
-import { ripple, textField, topAppBar } from 'material-components-web';
 import { run } from '@cycle/run';
-import { StateSource, withState } from '@cycle/state';
+import { withState } from '@cycle/state';
 import AutoNumeric from 'autonumeric';
 import currency from 'currency.js';
 import html from 'snabby';
 
-const MDCRipple = ripple.MDCRipple;
-const MDCTextField = textField.MDCTextField;
-const MDCTopAppBar = topAppBar.MDCTopAppBar;
-/** @type {typeof Stream} */
-const xs = _xs.default || _xs;
+const {
+  ripple: { MDCRipple },
+  textField: { MDCTextField },
+  topAppBar: { MDCTopAppBar },
+} = _material;
+/** @type {import('xstream/extra/sampleCombine').SampleCombineSignature} */
 const sampleCombine = _sampleCombine.default || _sampleCombine;
+/** @type {typeof import('xstream').Stream} */
+const xs = _xs.default || _xs;
 
-class EntryMode {
-  static idle = Symbol('idle');
-  static add = Symbol('add');
-  static edit = Symbol('edit');
-}
+const EntryMode = {
+  add: Symbol('add'),
+  edit: Symbol('edit'),
+  idle: Symbol('idle'),
+};
 
 /**
- * @param {Object}                          sources
- * @param {import('@cycle/dom').DOMSource}  sources.DOM
- * @param {StateSource}                     sources.state
+ * @param {Object}                              sources
+ * @param {import('@cycle/dom').DOMSource}      sources.DOM
+ * @param {import('@cycle/state').StateSource}  sources.state
  */
 function main(sources) {
   const state$ = sources.state.stream;
-  const savedEntries$ = state$.filter(({ entryMode }) => entryMode === EntryMode.idle).map(({ entries }) => entries);
+  const savedEntries$ = state$.filter(({ entryMode }) => entryMode === EntryMode.idle)
+    .map(({ entries }) => entries);
   const vdom$ = state$.map(({ balance, entries, entryMode }) => html`
     <div>
       <header @class=${{
@@ -37,6 +41,7 @@ function main(sources) {
         'app-top-app-bar--contextual': entryMode !== EntryMode.idle,
       }} @hook=${{
         insert: (vnode) => {
+          // eslint-disable-next-line no-new
           new MDCTopAppBar(vnode.elm);
         },
       }}>
@@ -79,14 +84,14 @@ function main(sources) {
                 'aria-label': 'Save',
               }}>done</button>
               ${entryMode === EntryMode.edit ? html`
-                  <button @class=${{
-                    'mdc-top-app-bar__action-item': true,
-                    'mdc-icon-button': true,
-                    'material-icons': true,
-                    delete: true,
-                  }} @attr=${{
-                    'aria-label': 'Delete',
-                  }}>delete</button>
+                <button @class=${{
+                  'mdc-top-app-bar__action-item': true,
+                  'mdc-icon-button': true,
+                  'material-icons': true,
+                  delete: true,
+                }} @attr=${{
+                  'aria-label': 'Delete',
+                }}>delete</button>
               ` : ''}
             </section>
           `}
@@ -110,6 +115,7 @@ function main(sources) {
                 'mdc-card__primary-action': entryMode === EntryMode.idle,
               }} @hook=${{
                 insert: (vnode) => {
+                  // eslint-disable-next-line no-new
                   new MDCRipple(vnode.elm);
                 },
               }}>
@@ -128,6 +134,7 @@ function main(sources) {
                       'mdc-text-field--filled': true,
                     }} @hook=${{
                       insert: (vnode) => {
+                        // eslint-disable-next-line no-new
                         new MDCTextField(vnode.elm);
                       },
                     }}>
@@ -166,6 +173,7 @@ function main(sources) {
                       'app-card__text--align-right': true,
                     }} @hook=${{
                       insert: (vnode) => {
+                        // eslint-disable-next-line no-new
                         new MDCTextField(vnode.elm);
                       },
                     }}>
@@ -188,6 +196,7 @@ function main(sources) {
                         value: amount.value,
                       }} @hook=${{
                         insert: (vnode) => {
+                          // eslint-disable-next-line no-new
                           new AutoNumeric(vnode.elm, 'numericPos');
                         },
                       }}>
@@ -218,6 +227,7 @@ function main(sources) {
           'aria-label': 'Add entry',
         }} @hook=${{
           insert: (vnode) => {
+            // eslint-disable-next-line no-new
             new MDCRipple(vnode.elm);
           },
         }}>
@@ -324,13 +334,24 @@ function main(sources) {
     entries: prevState.entries.filter((entry) => !entry.draft),
     entryMode: EntryMode.idle,
   }));
-  const cancelEditReducer$ = closeButtonClickEvent$.compose(sampleCombine(savedEntries$)).map(([_ev, savedEntries]) => (prevState) => ({
-    ...prevState,
-    entries: savedEntries,
-    entryMode: EntryMode.idle,
-  }));
+  const cancelEditReducer$ = closeButtonClickEvent$.compose(sampleCombine(savedEntries$))
+    .map(([_ev, savedEntries]) => (prevState) => ({
+      ...prevState,
+      entries: savedEntries,
+      entryMode: EntryMode.idle,
+    }));
 
-  const reducer$ = xs.merge(initReducer$, addEntryReducer$, editEntryReducer$, updateNameReducer$, updateAmountReducer$, saveEntryReducer$, deleteEntryReducer$, cancelAddReducer$, cancelEditReducer$);
+  const reducer$ = xs.merge(
+    initReducer$,
+    addEntryReducer$,
+    editEntryReducer$,
+    updateNameReducer$,
+    updateAmountReducer$,
+    saveEntryReducer$,
+    deleteEntryReducer$,
+    cancelAddReducer$,
+    cancelEditReducer$,
+  );
 
   const sinks = {
     DOM: vdom$,

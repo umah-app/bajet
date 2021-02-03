@@ -1,5 +1,11 @@
 module.exports = {
-  extends: 'airbnb-base',
+  extends: [
+    'airbnb-base',
+    'plugin:lit/recommended',
+  ],
+  env: {
+    browser: true,
+  },
   rules: {
     indent: ['error', 2, {
       SwitchCase: 1,
