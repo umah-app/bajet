@@ -12,10 +12,12 @@
     "@cycle/dom": "^22.8.0",
     "@cycle/run": "^5.5.0",
     "@cycle/state": "^1.4.0",
+    "@material/ripple": "^10.0.0",
+    "@material/textfield": "^10.0.0",
+    "@material/top-app-bar": "^10.0.0",
     "autonumeric": "^4.6.0",
     "currency.js": "^2.0.3",
-    "material-components-web": "^8.0.0",
-    "snabby": "^2.0.1",
+    "snabby": "^4.2.2",
     "xstream": "^11.14.0"
   },
   "devDependencies": {

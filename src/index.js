@@ -1,18 +1,15 @@
-import _material from 'material-components-web';
 import _sampleCombine from 'xstream/extra/sampleCombine';
 import _xs from 'xstream';
 import { makeDOMDriver } from '@cycle/dom';
+import { MDCRipple } from '@material/ripple';
+import { MDCTextField } from '@material/textfield';
+import { MDCTopAppBar } from '@material/top-app-bar';
 import { run } from '@cycle/run';
 import { withState } from '@cycle/state';
 import AutoNumeric from 'autonumeric';
 import currency from 'currency.js';
 import html from 'snabby';
 
-const {
-  ripple: { MDCRipple },
-  textField: { MDCTextField },
-  topAppBar: { MDCTopAppBar },
-} = _material;
 /** @type {import('xstream/extra/sampleCombine').SampleCombineSignature} */
 const sampleCombine = _sampleCombine.default || _sampleCombine;
 /** @type {typeof import('xstream').Stream} */

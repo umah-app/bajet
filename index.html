@@ -1,31 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://unpkg.com/material-components-web@8.0.0/dist/material-components-web.min.css">
-        <link rel="stylesheet" href="./assets/index.css">
-    </head>
-    <body>
-        <div id="app"></div>
+<head>
+  <meta charset="utf-8">
+  <title>Bajet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@8.0.0/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="./assets/index.css">
+</head>
+<body>
+  <div id="app"></div>
 
-        <script type="module" src="https://jspm.dev/es-module-shims" defer></script>
-        <script type="importmap-shim">
-        {
-          "imports": {
-            "@cycle/dom": "https://jspm.dev/@cycle/dom@22.8.0",
-            "@cycle/run": "https://jspm.dev/@cycle/run@5.5.0",
-            "@cycle/state": "https://jspm.dev/@cycle/state@1.4.0",
-            "autonumeric": "https://jspm.dev/autonumeric@4.6.0",
-            "currency.js": "https://jspm.dev/currency.js@2.0.3",
-            "material-components-web": "https://jspm.dev/material-components-web@8.0.0",
-            "snabby": "https://jspm.dev/snabby@2.0.1",
-            "xstream": "https://jspm.dev/xstream@11.14.0",
-            "xstream/extra/": "https://jspm.dev/xstream@11.14.0/extra/"
-          }
-        }
-        </script>
-        <script type="module-shim">
-        import './src/index.js';
-        </script>
-    </body>
+  <!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+) -->
+  <script async src="https://ga.jspm.io/npm:es-module-shims@0.10.1/dist/es-module-shims.min.js"></script>
+
+  <!--
+    JSPM Generator Import Map
+    Edit URL: https://generator.jspm.io/#bY7LCsIwEEWzceW3dNLEKi4DfskkjZCSF3lAu/LXnS6KKO7unDNw74kxdn4xjYttTJnNeMvnFJSUcIfxIKVHdYXrB9SGzSoB044C5eLQ8+Jy9oRHGL94s2t7OuvnPyrlAXMeNJZDYm8p9kDeqAluREwvxUazwVKVpJ8LqxG13khLkGytrVgMSggQ+6Cfm1N7QV4x0LhHCtpF+wb20G2x9wA
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@cycle/dom": "https://ga.jspm.io/npm:@cycle/dom@22.8.0/lib/cjs/index.js",
+      "@cycle/run": "https://ga.jspm.io/npm:@cycle/run@5.5.0/lib/cjs/index.js",
+      "@cycle/state": "https://ga.jspm.io/npm:@cycle/state@1.4.0/lib/cjs/index.js",
+      "@material/ripple": "https://ga.jspm.io/npm:@material/ripple@10.0.0/dist/mdc.ripple.js",
+      "@material/textfield": "https://ga.jspm.io/npm:@material/textfield@10.0.0/dist/mdc.textfield.js",
+      "@material/top-app-bar": "https://ga.jspm.io/npm:@material/top-app-bar@10.0.0/dist/mdc.topAppBar.js",
+      "autonumeric": "https://ga.jspm.io/npm:autonumeric@4.6.0/dist/autoNumeric.min.js",
+      "currency.js": "https://ga.jspm.io/npm:currency.js@2.0.3/dist/currency.min.js",
+      "snabby": "https://ga.jspm.io/npm:snabby@4.2.2/index.js",
+      "xstream": "https://ga.jspm.io/npm:xstream@11.14.0/index.js",
+      "xstream/extra/sampleCombine": "https://ga.jspm.io/npm:xstream@11.14.0/extra/sampleCombine.js"
+    },
+    "scopes": {
+      "https://ga.jspm.io/": {
+        "@cycle/isolate": "https://ga.jspm.io/npm:@cycle/isolate@5.2.0/lib/cjs/index.js",
+        "@cycle/run/lib/adapt": "https://ga.jspm.io/npm:@cycle/run@5.5.0/lib/adapt.js",
+        "define-properties": "https://ga.jspm.io/npm:define-properties@1.1.3/index.js",
+        "globalthis": "https://ga.jspm.io/npm:globalthis@1.0.2/index.js",
+        "hyperscript-attribute-to-property": "https://ga.jspm.io/npm:hyperscript-attribute-to-property@1.0.2/index.js",
+        "hyperx-tmp": "https://ga.jspm.io/npm:hyperx-tmp@2.5.4/index.js",
+        "object-keys": "https://ga.jspm.io/npm:object-keys@1.1.1/index.js",
+        "process": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.7/nodelibs/process.js",
+        "quicktask": "https://ga.jspm.io/npm:quicktask@1.1.0/index.js",
+        "resize-observer-polyfill": "https://ga.jspm.io/npm:resize-observer-polyfill@1.5.1/dist/ResizeObserver.js",
+        "snabbdom": "https://ga.jspm.io/npm:snabbdom@0.7.4/snabbdom.js",
+        "snabbdom-selector": "https://ga.jspm.io/npm:snabbdom-selector@4.2.0/lib/index.js",
+        "snabbdom/h": "https://ga.jspm.io/npm:snabbdom@0.7.4/h.js",
+        "snabbdom/modules/attributes": "https://ga.jspm.io/npm:snabbdom@0.7.4/modules/attributes.js",
+        "snabbdom/modules/class": "https://ga.jspm.io/npm:snabbdom@0.7.4/modules/class.js",
+        "snabbdom/modules/dataset": "https://ga.jspm.io/npm:snabbdom@0.7.4/modules/dataset.js",
+        "snabbdom/modules/props": "https://ga.jspm.io/npm:snabbdom@0.7.4/modules/props.js",
+        "snabbdom/modules/style": "https://ga.jspm.io/npm:snabbdom@0.7.4/modules/style.js",
+        "snabbdom/tovnode": "https://ga.jspm.io/npm:snabbdom@0.7.4/tovnode.js",
+        "snabbdom/vnode": "https://ga.jspm.io/npm:snabbdom@0.7.4/vnode.js",
+        "symbol-observable/ponyfill": "https://ga.jspm.io/npm:symbol-observable@2.0.3/ponyfill.js",
+        "tree-selector": "https://ga.jspm.io/npm:tree-selector@2.1.1/lib/cjs/index.js",
+        "xstream/extra/concat": "https://ga.jspm.io/npm:xstream@11.14.0/extra/concat.js",
+        "xstream/extra/dropRepeats": "https://ga.jspm.io/npm:xstream@11.14.0/extra/dropRepeats.js"
+      },
+      "https://ga.jspm.io/npm:snabby@4.2.2/": {
+        "snabbdom": "https://ga.jspm.io/npm:snabbdom@3.0.1/build/snabbdom.cjs.js"
+      }
+    }
+  }
+  </script>
+
+  <script type="module" src="./src/index.js"></script>
+</body>
 </html>
