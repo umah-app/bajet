@@ -1,12 +1,24 @@
 module.exports = {
   extends: [
     'airbnb-base',
+    // 'plugin:jsdoc/recommended',
     'plugin:lit/recommended',
   ],
+  settings: {
+    jsdoc: {
+      mode: 'typescript',
+    },
+  },
   env: {
     browser: true,
+    es2020: true,
+  },
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
   },
   rules: {
+    'import/extensions': ['error', 'ignorePackages'],
     indent: ['error', 2, {
       SwitchCase: 1,
       VariableDeclarator: 1,
@@ -47,6 +59,12 @@ module.exports = {
         'TemplateLiteral *',
       ],
       ignoreComments: false,
+    }],
+    'no-underscore-dangle': ['error', {
+      allow: ['_id'],
+      allowAfterThis: false,
+      allowAfterSuper: false,
+      enforceInMethodNames: true,
     }],
     'no-unused-vars': ['error', {
       vars: 'all',
