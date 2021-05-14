@@ -118,6 +118,8 @@ function main(sources) {
             }}>
               <div @class=${{
                 'mdc-card__primary-action': entryMode === EntryMode.idle,
+                'mdc-layout-grid': true,
+                'app-card__layout-grid': true,
               }} @hook=${{
                 insert: (vnode) => {
                   // eslint-disable-next-line no-new
@@ -125,9 +127,14 @@ function main(sources) {
                 },
               }}>
                 <div @class=${{
+                  'mdc-layout-grid__inner': true,
                   'app-card__text': true,
                 }}>
                   <span @class=${{
+                    'mdc-layout-grid__cell': true,
+                    'mdc-layout-grid__cell--span-1-phone': true,
+                    'mdc-layout-grid__cell--span-1-tablet': true,
+                    'mdc-layout-grid__cell--span-1-desktop': true,
                     'app-card__icon': true,
                     'material-icons': true,
                   }} @attrs=${{
@@ -137,6 +144,10 @@ function main(sources) {
                     <label @class=${{
                       'mdc-text-field': true,
                       'mdc-text-field--filled': true,
+                      'mdc-layout-grid__cell': true,
+                      'mdc-layout-grid__cell--span-4-phone': true,
+                      'mdc-layout-grid__cell--span-5-tablet': true,
+                      'mdc-layout-grid__cell--span-9-desktop': true,
                     }} @hook=${{
                       insert: (vnode) => {
                         // eslint-disable-next-line no-new
@@ -167,6 +178,10 @@ function main(sources) {
                     </label>
                   ` : html`
                     <span @class=${{
+                      'mdc-layout-grid__cell': true,
+                      'mdc-layout-grid__cell--span-2-phone': true,
+                      'mdc-layout-grid__cell--span-6-tablet': true,
+                      'mdc-layout-grid__cell--span-9-desktop': true,
                       'mdc-typography': true,
                       'mdc-typography--headline6': true,
                     }}>${name}</span>
@@ -175,7 +190,11 @@ function main(sources) {
                     <label @class=${{
                       'mdc-text-field': true,
                       'mdc-text-field--filled': true,
-                      'app-card__text--align-right': true,
+                      'mdc-layout-grid__cell': true,
+                      'mdc-layout-grid__cell--span-2-phone': true,
+                      'mdc-layout-grid__cell--span-2-tablet': true,
+                      'mdc-layout-grid__cell--span-2-desktop': true,
+                      // 'app-card__text--align-right': true,
                     }} @hook=${{
                       insert: (vnode) => {
                         // eslint-disable-next-line no-new
@@ -211,6 +230,10 @@ function main(sources) {
                     </label>
                   ` : html`
                     <span @class=${{
+                      'mdc-layout-grid__cell': true,
+                      'mdc-layout-grid__cell--span-1-phone': true,
+                      'mdc-layout-grid__cell--span-1-tablet': true,
+                      'mdc-layout-grid__cell--span-2-desktop': true,
                       'mdc-typography': true,
                       'mdc-typography--subtitle2': true,
                       'app-card__text--align-right': true,
