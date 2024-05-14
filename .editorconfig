@@ -23,9 +23,11 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
-[*.{js,mjs}]
+[*.{js,ts}]
 indent_style = space
 indent_size = 2
+# non-standard
+quote_type = single
 
 [*.json]
 indent_style = space
@@ -33,15 +35,9 @@ indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
-
-[.eslintrc.js]
-indent_style = space
-indent_size = 2
+# non-standard
+max_line_length = off
 
 [package.json]
-indent_style = space
-indent_size = 2
-
-[web-dev-server.config.mjs]
 indent_style = space
 indent_size = 2
