@@ -3,3 +3,10 @@ main.main {
   height: 100vh;
   background-color: var(--mat-sidenav-container-background-color);
 }
+
+button[mat-fab].add {
+  position: fixed;
+  /* https://m3.material.io/components/floating-action-button/specs#e5677e43-376c-449c-8e0d-bf26c852fc46 */
+  right: 16px;
+  bottom: 16px;
+}
