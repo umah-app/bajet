@@ -1,0 +1,5 @@
+main.main {
+  display: grid;
+  height: 100vh;
+  background-color: var(--mat-tree-container-background-color);
+}
